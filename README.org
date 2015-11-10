@@ -1,0 +1,53 @@
+* これは何？
+
+Maven + Eclipse な構成で [[https://code.google.com/p/spock/][Spock]] Testing Famework を使用してみるためのサンプルプロジェクト。
+
+* 参考
+
+書籍[[https://www.manning.com/books/java-testing-with-spock][Java Testing with Spock]] の Appendix A: Installing Spock
+
+* Eclipse 設定
+
+** Groovy-Eclipse Plugin
+
+現在のところMars向けはSnapshot版しか無い模様(それ未満のバージョンはMarketplaceから入手できる)。
+
+https://github.com/groovy/groovy-eclipse/wiki
+
+update site として http://dist.springsource.org/snapshot/GRECLIPSE/e4.5/ を設定する。
+
+インストールするもの:
+- Groovy-Eclipse (Required)
+- Groovy Compiler 2.4 Feature
+ - Spockが2.4を要求するため。これを入れないと2.3になる模様。
+
+** Spock Plugin 2.10.0
+
+こちらはMarketplaceにあるものをインストール。
+必須ではないはず。
+
+** ビルドパス手動追加
+
+test/groovy フォルダを手動でビルドパスに追加する必要がある。
+
+* Eclipseでの実行
+
+Eclipseで実行するためには、(コマンドライン、あるいはEclipse上のプロジェクトを右っクリックすることで実行できる) ~mvn test~ を一度手動で実行する必要がある。
+テストフィクスチャファイルを右クリックしてJUnit実行した場合には、上記のコマンド過程で生成されたクラスファイルが用いられるようだ。
+従って、 ~mvn test~ を実行せずにコンテキストメニューのJUnitを選択すると、 ~ClassNotFoundException~ が発生したり、修正前のテストフィクスチャの結果になったりする。
+
+* 所感
+
+Gradle/IntelliJ のような環境では導入時意識することはないのかもしれないが、Eclipse環境では微妙。
+実コードとテストコードに(物理的/心理的に)距離感ができてしまうと、すぐにテストコードが腐ってしまうという経験を考えると、必ずしも導入した場合にメリットが上回るというわけでもなさそう。
+
+(物理的/心理的に)距離感ができる、というのは例えば以下のような状況:
+
+- 実コードとテストコードで用いるプログラミング言語が違う
+- 実コードとテストコードが異なるMavenモジュールとして存在する
+ - テストコードをEclipseにインポートしていないと、コンパイルエラーすら認識できない(が開発は問題なく行える)
+- CIと開発者が行うテストが違う
+ - CIではテストをフルに行うが、開発者は時間短縮のためMavenのprofile機能で切り替えていたり…
+
+ゼロにする必要はないと思うが、伸びるデメリットを認識することは重要。
+
